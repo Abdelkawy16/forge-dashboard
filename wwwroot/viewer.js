@@ -1,4 +1,5 @@
 import './extensions/LoggerExtension.js';
+import './extensions/SummaryExtension.js';
 
 async function getAccessToken(callback) {
     try {
@@ -18,7 +19,7 @@ export function initViewer(container) {
     return new Promise(function (resolve, reject) {
         Autodesk.Viewing.Initializer({ getAccessToken }, function () {
             const config = {
-                extensions: ['LoggerExtension']
+                extensions: ['LoggerExtension', 'SummaryExtension',]
             };
             const viewer = new Autodesk.Viewing.GuiViewer3D(container, config);
             viewer.start();

@@ -20,11 +20,13 @@
         return true;
     }
 
-    onModelLoaded(model) { }
+    onToolbarCreated() {}
 
-    onSelectionChanged(model, dbids) { }
+    onModelLoaded(model) {}
 
-    onIsolationChanged(model, dbids) { }
+    onSelectionChanged(model, dbids) {}
+
+    onIsolationChanged(model, dbids) {}
 
     findLeafNodes(model) {
         return new Promise(function (resolve, reject) {
@@ -34,7 +36,7 @@
                     if (tree.getChildCount(dbid) === 0) {
                         leaves.push(dbid);
                     }
-                }, true /* recursively enumerate children's children as well */);
+                }, true);
                 resolve(leaves);
             }, reject);
         });
@@ -53,5 +55,29 @@
                 resolve(Array.from(propNames.values()));
             }, reject);
         });
+    }
+
+    createToolbarButton(buttonId, buttonIconUrl, buttonTooltip) {
+        let group = this.viewer.toolbar.getControl('dashboard-toolbar-group');
+        if (!group) {
+            group = new Autodesk.Viewing.UI.ControlGroup('dashboard-toolbar-group');
+            this.viewer.toolbar.addControl(group);
+        }
+        const button = new Autodesk.Viewing.UI.Button(buttonId);
+        button.setToolTip(buttonTooltip);
+        group.addControl(button);
+        const icon = button.container.querySelector('.adsk-button-icon');
+        if (icon) {
+            icon.style.backgroundImage = `url(${buttonIconUrl})`; 
+            icon.style.backgroundSize = `24px`; 
+            icon.style.backgroundRepeat = `no-repeat`; 
+            icon.style.backgroundPosition = `center`; 
+        }
+        return button;
+    }
+
+    removeToolbarButton(button) {
+        const group = this.viewer.toolbar.getControl('dashboard-toolbar-group');
+        group.removeControl(button);
     }
 }

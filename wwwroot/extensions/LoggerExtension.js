@@ -20,7 +20,6 @@ class LoggerExtension extends BaseExtension {
     }
 
     async onSelectionChanged(model, dbids) {
-        debugger
         super.onSelectionChanged(model, dbids);
         console.log('Selection has changed', dbids);
     }
