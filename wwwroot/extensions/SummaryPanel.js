@@ -6,7 +6,6 @@ export class SummaryPanel extends Autodesk.Viewing.UI.PropertyPanel {
 
     async update(model, dbids, propNames) {
         this.removeAllProperties();
-        debugger
         for (const propName of propNames) {
             const initialValue = { sum: 0, count: 0, min: Infinity, max: -Infinity };
             const aggregateFunc = (aggregate, value, property) => {
@@ -21,7 +20,6 @@ export class SummaryPanel extends Autodesk.Viewing.UI.PropertyPanel {
             };
             const { sum, count, min, max, units, precision } = await this.aggregatePropertyValues(model, dbids, propName, aggregateFunc, initialValue);
             if (count > 0) {
-                debugger
                 const category = propName;
                 this.addProperty('Count', count, category);
                 this.addProperty('Sum', this.toDisplayUnits(sum, units, precision), category);

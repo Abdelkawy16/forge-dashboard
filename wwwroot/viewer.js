@@ -1,5 +1,6 @@
 import './extensions/LoggerExtension.js';
 import './extensions/SummaryExtension.js';
+import './extensions/HistogramExtension.js';
 
 async function getAccessToken(callback) {
     try {
@@ -19,7 +20,7 @@ export function initViewer(container) {
     return new Promise(function (resolve, reject) {
         Autodesk.Viewing.Initializer({ getAccessToken }, function () {
             const config = {
-                extensions: ['LoggerExtension', 'SummaryExtension',]
+                extensions: ['LoggerExtension', 'SummaryExtension', 'HistogramExtension',]
             };
             const viewer = new Autodesk.Viewing.GuiViewer3D(container, config);
             viewer.start();

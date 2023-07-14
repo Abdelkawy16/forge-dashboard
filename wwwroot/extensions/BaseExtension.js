@@ -80,4 +80,28 @@
         const group = this.viewer.toolbar.getControl('dashboard-toolbar-group');
         group.removeControl(button);
     }
+
+    loadScript(url, namespace) {
+        if (window[namespace] !== undefined) {
+            return Promise.resolve();
+        }
+        return new Promise(function (resolve, reject) {
+            const el = document.createElement('script');
+            el.src = url;
+            el.onload = resolve;
+            el.onerror = reject;
+            document.head.appendChild(el);
+        });
+    }
+
+    loadStylesheet(url) {
+        return new Promise(function (resolve, reject) {
+            const el = document.createElement('link');
+            el.rel = 'stylesheet';
+            el.href = url;
+            el.onload = resolve;
+            el.onerror = reject;
+            document.head.appendChild(el);
+        });
+    }
 }
