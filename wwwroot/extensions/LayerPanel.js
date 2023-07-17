@@ -28,17 +28,26 @@ export class LayerPanel extends Autodesk.Viewing.UI.DockingPanel {
     for (const item of layers) {
       const li = document.createElement("li");
       li.textContent = item;
-      const button = document.createElement("button");
-      button.textContent = "Hide Layer";
+      const hideButton = document.createElement("button");
+      hideButton.textContent = "Hide Layer";
 
-      button.addEventListener("click", () => {
+      hideButton.addEventListener("click", () => {
         this.hideLayer(item, model);
       });
 
-      li.appendChild(button);
+      const showButton = document.createElement("button");
+      showButton.textContent = "Show Layer";
+
+      showButton.addEventListener("click", () => {
+        this.showLayer(item, model);
+      });
+
+      li.appendChild(hideButton);
+      li.appendChild(showButton);
       ul.appendChild(li);
     }
   }
+
   hideLayer(layerName, model) {
     this.extension.findLeafNodes(model)
     .then((dbids) => {
@@ -50,6 +59,32 @@ export class LayerPanel extends Autodesk.Viewing.UI.DockingPanel {
             const r = result.name.replace(/\[\d+]/g, "");
             if(r == layerName){
                 this.extension.viewer.hide(result.dbId);
+            }
+            
+          });
+        },
+        (err) => {
+          console.error(err);
+        }
+      );
+    })
+    .catch((err) =>
+      confirm(
+        "Couldn't find leaf nodes. Do you want to load the whole model?"
+      )
+    );
+  }
+  showLayer(layerName, model) {
+    this.extension.findLeafNodes(model)
+    .then((dbids) => {
+      model.getBulkProperties(
+        dbids,
+        {},
+        (results) => {
+          results.forEach((result) => {
+            const r = result.name.replace(/\[\d+]/g, "");
+            if(r == layerName){
+                this.extension.viewer.show(result.dbId);
             }
             
           });
