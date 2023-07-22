@@ -50,7 +50,7 @@ export const Utilities = {
       frags.getWorldBounds(index, bbox);
       if (Utilities.pointIsInsideBox(bbox, point)) {
         //debugger;
-        ids.add(frags.getDbIds(index))
+        ids.add(frags.getDbIds(index));
         //console.log(`has bound boxes of `, bbox);
         let center = bbox.center();
         //console.log(center);
@@ -58,5 +58,58 @@ export const Utilities = {
     }
     //console.log(ids);
     return ids;
+  },
+  getObjectsIntersectingRaycast: (viewer, objects) => {
+    debugger;
+    var camera = viewer.getCamera();
+    var origin = camera.position.clone();
+    var direction = new THREE.Vector3(0, 0, -1).applyQuaternion(
+      camera.quaternion
+    );
+    var raycaster = new THREE.Raycaster(origin, direction);
+
+    // get objects intersect with raycaster
+    var intersects = raycaster.intersectObjects(objects);
+
+    debugger
+    intersects.forEach(element => {
+      viewer.hide(element.object.userData.bdId);
+    });
+  },
+
+  getMeshes: (viewer) => {
+    const frags = viewer.model.getFragmentList();
+    const meshes = [];
+
+    for (let index = 0; index < frags.getCount(); index++) {
+      let box3 = new THREE.Box3();
+      frags.getWorldBounds(index, box3);
+      const material = new THREE.MeshStandardMaterial();
+
+      // make a BoxBufferGeometry of the same size as Box3
+      const dimensions = new THREE.Vector3().subVectors(box3.max, box3.min);
+      const boxGeo = new THREE.BoxBufferGeometry(
+        dimensions.x,
+        dimensions.y,
+        dimensions.z
+      );
+
+      // move new mesh center so it's aligned with the original object
+      const matrix = new THREE.Matrix4().setPosition(
+        dimensions.addVectors(box3.min, box3.max).multiplyScalar(0.5)
+      );
+      boxGeo.applyMatrix(matrix);
+
+      // make a mesh
+      const mesh = new THREE.Mesh(
+        boxGeo,
+        new THREE.MeshBasicMaterial({ color: 0xffcc55 })
+      );
+
+      mesh.userData.bdId = frags.getDbIds(index);
+      meshes.push(mesh);
+    }
+
+    return meshes;
   },
 };

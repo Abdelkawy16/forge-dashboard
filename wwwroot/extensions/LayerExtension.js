@@ -65,7 +65,7 @@ class LayerExtension extends BaseExtension {
   }
 
   update(model) {
-    const point = { x: 50, y: -50, z: 0 };
+    const point = { x: 0, y: 0, z: 0 };
     
     const ids = Utilities.getElementsContainingPoint(this.viewer, point);
     
@@ -80,6 +80,7 @@ class LayerExtension extends BaseExtension {
               if(ids.has(result.dbId))
               {
                 this._objects.push(result);
+                //this.viewer.hide(result.dbId);
               }
               const r = result.name.replace(/\[\d+]/g, "");
               this._layers.add(r);
@@ -100,6 +101,10 @@ class LayerExtension extends BaseExtension {
           "Couldn't find leaf nodes. Do you want to load the whole model?"
         )
       );
+
+      const meshes = Utilities.getMeshes(this.viewer);
+
+      Utilities.getObjectsIntersectingRaycast(this.viewer, meshes);
   }
 
   // getPositionOfNode(element) {
