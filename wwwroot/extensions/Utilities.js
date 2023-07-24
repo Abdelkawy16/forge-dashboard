@@ -62,16 +62,16 @@ export const Utilities = {
   getObjectsIntersectingRaycast: (viewer, objects) => {
     debugger;
     var camera = viewer.getCamera();
-    var origin = camera.position.clone();
-    var direction = new THREE.Vector3(0, 0, -1).applyQuaternion(
-      camera.quaternion
-    );
+    //var origin = camera.position.clone();
+    var origin = new THREE.Vector3(1, -1, 1);
+    var direction = new THREE.Vector3(0, 0, -1);
     var raycaster = new THREE.Raycaster(origin, direction);
 
     // get objects intersect with raycaster
     var intersects = raycaster.intersectObjects(objects);
 
     debugger
+    console.log("ids: ", intersects.map(x=>x.object.userData.bdId));
     intersects.forEach(element => {
       viewer.hide(element.object.userData.bdId);
     });
